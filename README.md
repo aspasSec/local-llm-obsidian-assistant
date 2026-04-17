@@ -18,6 +18,29 @@ Um assistente pessoal inteligente que aprende com suas notas do Obsidian usando 
 - **Ollama** - [Download para Windows](https://ollama.com/download/windows)
 - **Obsidian** (opcional) - [Download](https://obsidian.md/)
 
+- ## 🚀 Como rodar o projeto
+
+### Comandos principais:
+
+```bash
+# 1. Criar/atualizar o banco de dados (primeira vez ou quando adicionar notas)
+python -c "from rag import create_db; create_db()"
+
+# 2. Iniciar o chat com modelo local
+python chat.py --local --model llama3.2:1b
+
+# 3. Ou com modelo maior (se tiver RAM)
+python chat.py --local --model llama3.2:3b
+
+# 4. Ou com modelo mais leve
+python chat.py --local --model qwen2.5:0.5b
+
+# 5. Testar conexão com Obsidian
+python rag.py test-obsidian
+
+# 6. Buscar algo no banco de dados
+python rag.py search "termo da busca"
+
 ## 🚀 Instalação
 
 ### 1. Clone o repositório
