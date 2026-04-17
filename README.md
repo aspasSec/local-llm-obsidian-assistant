@@ -148,9 +148,3 @@ MIT License
 Este projeto é para fins educacionais. Use as ferramentas de segurança apenas em sistemas autorizados.
 
 Desenvolvido com 🧠 para aprender com seu conhecimento pessoal
-
-text
-
-Agora está organizado:
-- **Instalação** = configurar o ambiente (1 vez)
-- **Como Rodar** = comandos para usar todo dia
