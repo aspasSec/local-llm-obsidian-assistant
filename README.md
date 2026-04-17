@@ -1,8 +1,8 @@
-# 🤖 Local LLM Assistant with Obsidian RAG
+#  Local LLM Assistant with Obsidian RAG
 
 Um assistente pessoal inteligente que aprende com suas notas do Obsidian usando RAG (Retrieval-Augmented Generation) e LLMs locais via Ollama. Na pasta Vault contém anotações envolvendo cyber security, artigos, métodos, e tutorias de como usar ferramentas de Pentest no Kali. Fique à vontade para perguntar sobre segurança, invasão, e notícias envolvendo ataque cibernético.
 
-## ✨ Funcionalidades
+##  Funcionalidades
 
 - 📝 **RAG com Obsidian**: Indexa automaticamente suas notas Markdown
 - 🤖 **LLM Local**: Usa Ollama para rodar modelos localmente (sem internet)
