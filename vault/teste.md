@@ -1,0 +1,1 @@
+O protocolo HTTPS usa criptografia TLS para proteger dados.
