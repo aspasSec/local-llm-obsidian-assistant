@@ -2,7 +2,7 @@ python chat.py --local --model llama3.2:3b
 
 # 🤖 Local LLM Assistant with Obsidian RAG
 
-Um assistente pessoal inteligente que aprende com suas notas do Obsidian usando RAG (Retrieval-Augmented Generation) e LLMs locais via Ollama.
+Um assistente pessoal inteligente que aprende com suas notas do Obsidian usando RAG (Retrieval-Augmented Generation) e LLMs locais via Ollama, na pasta Vault contém Anotações envolvendo ciber security, artigos, métodos, e tutorias de como usar ferramentas de Pentest no Kali, então fique a vontade para perguntar sobre segurança, invação, e noticias envolvendo ataque cibernetico
 
 ## ✨ Funcionalidades
 
