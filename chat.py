@@ -16,19 +16,12 @@ SHOW_CONTEXT = os.getenv("SHOW_CONTEXT", "False").lower() == "true"
 
 class JarvisChat:
     def __init__(self, use_local=False, model_name=None):
-        """
-        Inicializa o assistente Jarvis
-        
-        Args:
-            use_local: Se True, usa Ollama local. Se False, usa Gemini API
-            model_name: Nome do modelo local (ex: "llama3.2:3b")
-        """
-        print("🚀 Inicializando Jarvis...")
+        print("🚀 Inicializando Bob o ovudo...")
         try:
             self.db = load_db()
-            print("✅ Banco de dados carregado com sucesso")
+            print(" Banco de dados carregado com sucesso")
         except FileNotFoundError:
-            print("⚠️  Banco de dados não encontrado!")
+            print("  Banco de dados não encontrado!")
             resposta = input("Deseja criar o banco agora? (s/n): ")
             if resposta.lower() == 's':
                 from rag import create_db
