@@ -1,4 +1,4 @@
-# memory.py
+
 from typing import List, Dict
 from datetime import datetime
 
@@ -14,7 +14,6 @@ class ConversationMemory:
             "timestamp": datetime.now().isoformat()
         })
         
-        # Mantém apenas as últimas N interações
         if len(self.history) > self.max_history:
             self.history = self.history[-self.max_history:]
     
@@ -24,7 +23,7 @@ class ConversationMemory:
             return ""
         
         context = "Histórico da conversa:\n"
-        for item in self.history[-3:]:  # Últimas 3 interações
+        for item in self.history[-3:]:  
             context += f"Usuário: {item['user']}\n"
             context += f"Assistente: {item['assistant']}\n"
         
