@@ -39,7 +39,7 @@ python chat.py --local --model qwen2.5:0.5b
 python rag.py test-obsidian
 
 # 6. Buscar algo no banco de dados
-python rag.py search "termo da busca"
+python rag.py search "termo da busca" ```bash
 
 ## 🚀 Instalação
 
