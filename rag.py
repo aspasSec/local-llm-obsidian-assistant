@@ -29,7 +29,7 @@ def get_embeddings():
     return HuggingFaceEmbeddings(
         model_name="all-MiniLM-L6-v2",
         model_kwargs={'device': 'cpu'},  # Força uso de CPU
-        encode_kwargs={'normalize_embeddings': True}  # Normaliza embeddings
+        encode_kwargs={'normalize_embeddings': True}
     )
 
 
@@ -43,7 +43,7 @@ def create_db(obsidian_path=None):
 
     if obsidian_path is None:
         obsidian_path = r"C:\Users\eumar\OneDrive\Documentos\Obsidian Vault"
-    print(f"📂 Verificando caminho: {obsidian_path}")
+    print(f" Verificando caminho: {obsidian_path}")
     
     if not os.path.exists(obsidian_path):
         print(f"❌ ERRO: Caminho não encontrado: {obsidian_path}")
@@ -56,14 +56,13 @@ def create_db(obsidian_path=None):
             if file.endswith('.md'):
                 md_files.append(os.path.join(root, file))
     
-    print(f"📄 Encontrados {len(md_files)} arquivos Markdown")
+    print(f" Encontrados {len(md_files)} arquivos Markdown")
     
     if len(md_files) == 0:
         print("❌ Nenhum arquivo .md encontrado!")
         print(f"Verifique se a pasta contém arquivos Markdown: {obsidian_path}")
         return None
-    
-    # Carrega todos os arquivos .md
+
     loader = DirectoryLoader(
         obsidian_path,
         glob="**/*.md",
@@ -75,8 +74,7 @@ def create_db(obsidian_path=None):
     
     docs = loader.load()
     print(f"✅ Carregados {len(docs)} documentos")
-    
-    # Divide os documentos em chunks
+
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=500,
         chunk_overlap=50,
@@ -86,8 +84,7 @@ def create_db(obsidian_path=None):
     
     chunks = splitter.split_documents(docs)
     print(f"✂️  Divididos em {len(chunks)} chunks")
-    
-    # Cria embeddings e vectorstore
+
     embeddings = get_embeddings()
     
     print("🔨 Criando banco de dados vetorial...")
@@ -96,9 +93,9 @@ def create_db(obsidian_path=None):
     if os.path.exists(DB_PATH):
         import shutil
         shutil.rmtree(DB_PATH)
-        print("🗑️  Banco antigo removido")
+        print("  Banco antigo removido")
     
-    # Cria novo banco (agora sem .persist())
+
     db = Chroma.from_documents(
         chunks,
         embeddings,
@@ -106,14 +103,13 @@ def create_db(obsidian_path=None):
         collection_name="jarvis_obsidian"
     )
     
-    # Na nova versão, o Chroma persiste automaticamente
-    print(f"💾 Banco de dados salvo em: {DB_PATH}")
-    print(f"✅ Banco criado com {db._collection.count()} documentos")
+
+    print(f" Banco de dados salvo em: {DB_PATH}")
+    print(f" Banco criado com {db._collection.count()} documentos")
     
     return db
 
 def notify_obsidian(pergunta: str, docs: list, resposta: str = None):
-    """Envia busca para o Obsidian"""
     if not docs:
         return
     
@@ -123,7 +119,7 @@ def notify_obsidian(pergunta: str, docs: list, resposta: str = None):
     timestamp = int(time.time())
     date_str = time.strftime('%Y-%m-%d')
     
-    note_content = f"""# 🔍 Busca Jarvis - {time.strftime('%H:%M:%S')}
+    note_content = f"""#  Busca Jarvis - {time.strftime('%H:%M:%S')}
 
 ## Pergunta
 {pergunta}
@@ -150,15 +146,6 @@ def notify_obsidian(pergunta: str, docs: list, resposta: str = None):
         pass
 
 def load_db():
-    """
-    Carrega o banco de dados vetorial existente
-    
-    Returns:
-        Chroma: Vectorstore carregado
-    
-    Raises:
-        FileNotFoundError: Se o banco não existir
-    """
     if not os.path.exists(DB_PATH):
         raise FileNotFoundError(
             f"Banco de dados não encontrado em {DB_PATH}. "
@@ -173,27 +160,16 @@ def load_db():
         collection_name="jarvis_obsidian"
     )
     
-    # Verifica se o banco tem documentos
+
     collection_count = db._collection.count()
-    print(f"✅ Banco de dados carregado: {collection_count} documentos")
+    print(f"Banco de dados carregado: {collection_count} documentos")
     
     if collection_count == 0:
-        print("⚠️  Banco está vazio! Execute create_db() para popular.")
+        print("  Banco está vazio! Execute create_db() para popular.")
     
     return db
 
 def search_similar(query: str, k: int = 4, db=None):
-    """
-    Busca documentos similares no banco
-    
-    Args:
-        query: Texto da consulta
-        k: Número de resultados
-        db: Vectorstore (se None, carrega o padrão)
-    
-    Returns:
-        Lista de documentos similares
-    """
     if db is None:
         db = load_db()
     
@@ -203,16 +179,7 @@ def search_similar(query: str, k: int = 4, db=None):
     return results
 
 def get_context_for_query(query: str, k: int = 4) -> str:
-    """
-    Obtém o contexto relevante para uma pergunta
-    
-    Args:
-        query: Pergunta do usuário
-        k: Número de documentos a recuperar
-    
-    Returns:
-        String com contexto formatado
-    """
+
     try:
         docs = search_similar(query, k=k)
         
@@ -225,34 +192,24 @@ def get_context_for_query(query: str, k: int = 4) -> str:
         return "\n".join(context_parts)
     
     except FileNotFoundError:
-        print("⚠️  Banco de dados não encontrado. Criando novo banco...")
+        print("  Banco de dados não encontrado. Criando novo banco...")
         create_db()
         return get_context_for_query(query, k)
 
 def update_db(obsidian_path=None):
-    """
-    Atualiza o banco de dados (recria do zero)
-    """
-    print("🔄 Recriando banco de dados...")
+
+    print("Recriando banco de dados...")
     
-    # Remove banco antigo se existir
     if os.path.exists(DB_PATH):
         import shutil
         shutil.rmtree(DB_PATH)
-        print("🗑️  Banco antigo removido")
+        print(" Banco antigo removido")
     
-    # Cria novo banco
     create_db(obsidian_path)
-    print("✅ Banco de dados atualizado!")
+    print(" Banco de dados atualizado!")
 
 def add_document(text: str, metadata: dict = None):
-    """
-    Adiciona um documento diretamente ao banco
-    
-    Args:
-        text: Texto do documento
-        metadata: Metadados adicionais (opcional)
-    """
+
     db = load_db()
     
     if metadata is None:
@@ -263,9 +220,8 @@ def add_document(text: str, metadata: dict = None):
     
     db.add_documents([doc])
     db.persist()
-    print(f"✅ Documento adicionado: {metadata.get('source', 'manual')}")
+    print(f" Documento adicionado: {metadata.get('source', 'manual')}")
 
-# Exemplo de uso direto
 if __name__ == "__main__":
     import sys
     
@@ -273,11 +229,11 @@ if __name__ == "__main__":
         command = sys.argv[1]
         
         if command == "create":
-            print("🚀 Criando banco de dados...")
+            print(" Criando banco de dados...")
             create_db()
         
         elif command == "update":
-            print("🚀 Atualizando banco de dados...")
+            print(" Atualizando banco de dados...")
             update_db()
         
         elif command == "search" and len(sys.argv) > 2:
@@ -300,7 +256,7 @@ if __name__ == "__main__":
             print("  python rag.py update       - Atualiza banco de dados")
             print("  python rag.py search <termo> - Busca no banco")
     else:
-        print("📚 Sistema RAG - Jarvis")
+        print(" Sistema RAG - Bob")
         print("Comandos disponíveis:")
         print("  python rag.py create       - Cria banco de dados")
         print("  python rag.py update       - Atualiza banco de dados")
