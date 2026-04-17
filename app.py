@@ -6,7 +6,6 @@ from llm import ask_gemini
 
 app = FastAPI()
 
-# Garante que o banco existe
 if not os.path.exists("db"):
     create_db()
 
