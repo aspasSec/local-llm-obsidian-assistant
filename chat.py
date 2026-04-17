@@ -24,8 +24,6 @@ class JarvisChat:
             model_name: Nome do modelo local (ex: "llama3.2:3b")
         """
         print("🚀 Inicializando Jarvis...")
-        
-        # Carrega o banco de dados vetorial
         try:
             self.db = load_db()
             print("✅ Banco de dados carregado com sucesso")
@@ -39,8 +37,6 @@ class JarvisChat:
             else:
                 print("❌ Sem banco de dados, encerrando...")
                 sys.exit(1)
-        
-        # Configura o LLM
         if use_local:
             model = model_name or LOCAL_MODEL
             print(f"🤖 Usando LLM local: {model}")
@@ -97,12 +93,8 @@ class JarvisChat:
         return prompt
     
     def ask(self, question: str) -> str:
-        """Faz uma pergunta ao Jarvis"""
-        
-        # ANIMAÇÃO ANTES DA BUSCA
         self.animar_busca()
-        
-        # Busca contexto relevante
+
         try:
             docs = self.db.similarity_search(question, k=3)
             
@@ -114,12 +106,11 @@ class JarvisChat:
                 if SHOW_CONTEXT:
                     print(f"\n📚 Contexto encontrado: {len(docs)} documentos")
                 
-                # Salva no Obsidian se tiver documentos
                 try:
                     notify_obsidian(question, docs)
                     print("📝 Busca salva no Obsidian!")
                 except:
-                    pass  # Ignora erro do Obsidian
+                    pass 
             else:
                 context = "Nenhum contexto relevante encontrado nas notas."
                 if SHOW_CONTEXT:
@@ -129,18 +120,15 @@ class JarvisChat:
             print(f"⚠️ Erro ao buscar contexto: {e}")
             context = "Erro ao acessar banco de dados"
             docs = []
-        
-        # Constrói prompt
+
         prompt = self.build_prompt(question, context)
-        
-        # Obtém resposta do LLM
+
         try:
             if self.llm:
                 response = self.llm.generate(prompt)
             else:
                 response = ask_gemini(prompt)
-            
-            # Salva no histórico
+
             self.conversation_history.append({
                 "user": question,
                 "assistant": response
@@ -160,35 +148,29 @@ class JarvisChat:
         if not self.llm:
             print("⚠️ Streaming disponível apenas com LLM local")
             return self.ask(question)
-        
-        # ANIMAÇÃO ANTES DA BUSCA
+
         self.animar_busca()
-        
-        # Busca contexto
+
         docs = self.db.similarity_search(question, k=3)
         context = "\n\n".join([doc.page_content for doc in docs]) if docs else ""
-        
-        # Salva no Obsidian se tiver documentos
+
         if docs:
             try:
                 notify_obsidian(question, docs)
                 print("📝 Busca salva no Obsidian!")
             except:
                 pass
-        
-        # Constrói prompt
+
         prompt = self.build_prompt(question, context)
-        
-        # Gera resposta em streaming
-        print("\n🤖 ", end="", flush=True)
+
+        print("\n ", end="", flush=True)
         full_response = ""
         for chunk in self.llm.stream_generate(prompt):
             print(chunk, end="", flush=True)
             full_response += chunk
         
         print("\n")
-        
-        # Salva no histórico
+
         self.conversation_history.append({
             "user": question,
             "assistant": full_response
@@ -219,8 +201,7 @@ class JarvisChat:
                 
                 if not pergunta:
                     continue
-                
-                # Comandos especiais
+
                 if pergunta.lower() in ["/sair", "/exit", "/quit", "sair", "exit", "quit"]:
                     print("\n👋 Até logo! Jarvis encerrando...\n")
                     break
@@ -238,8 +219,7 @@ class JarvisChat:
                 elif pergunta.lower() == "/stats":
                     self.show_stats()
                     continue
-                
-                # Processa pergunta normal
+
                 if self.llm and hasattr(self.llm, 'stream_generate'):
                     self.stream_ask(pergunta)
                 else:
@@ -274,8 +254,7 @@ def main():
     parser.add_argument("--question", type=str, help="Fazer uma pergunta única e sair")
     
     args = parser.parse_args()
-    
-    # Verifica se Ollama está rodando para modo local
+
     if args.local:
         import requests
         try:
@@ -286,17 +265,14 @@ def main():
             print("Inicie o Ollama primeiro: ollama serve")
             print("Ou remova a flag --local para usar Gemini API")
             sys.exit(1)
-    
-    # Inicializa Jarvis
+
     jarvis = JarvisChat(use_local=args.local, model_name=args.model)
-    
-    # Modo pergunta única
+
     if args.question:
         resposta = jarvis.ask(args.question)
         print(f"\nPergunta: {args.question}")
         print(f"Resposta: {resposta}\n")
     else:
-        # Modo interativo
         jarvis.run_cli()
 
 
