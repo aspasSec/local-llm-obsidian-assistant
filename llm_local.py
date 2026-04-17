@@ -9,7 +9,6 @@ class OllamaLLM:
         self._check_availability()
     
     def _check_availability(self):
-        """Verifica se Ollama está disponível"""
         try:
             response = requests.get(f"{self.base_url}/api/tags", timeout=2)
             response.raise_for_status()
