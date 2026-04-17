@@ -1,8 +1,6 @@
-python chat.py --local --model llama3.2:3b
-
 # 🤖 Local LLM Assistant with Obsidian RAG
 
-Um assistente pessoal inteligente que aprende com suas notas do Obsidian usando RAG (Retrieval-Augmented Generation) e LLMs locais via Ollama, na pasta Vault contém Anotações envolvendo ciber security, artigos, métodos, e tutorias de como usar ferramentas de Pentest no Kali, então fique a vontade para perguntar sobre segurança, invação, e noticias envolvendo ataque cibernetico
+Um assistente pessoal inteligente que aprende com suas notas do Obsidian usando RAG (Retrieval-Augmented Generation) e LLMs locais via Ollama. Na pasta Vault contém anotações envolvendo cyber security, artigos, métodos, e tutorias de como usar ferramentas de Pentest no Kali. Fique à vontade para perguntar sobre segurança, invasão, e notícias envolvendo ataque cibernético.
 
 ## ✨ Funcionalidades
 
@@ -18,37 +16,15 @@ Um assistente pessoal inteligente que aprende com suas notas do Obsidian usando 
 - **Ollama** - [Download para Windows](https://ollama.com/download/windows)
 - **Obsidian** (opcional) - [Download](https://obsidian.md/)
 
-- ## 🚀 Como rodar o projeto
-
-### Comandos principais:
-
-```bash
-# 1. Criar/atualizar o banco de dados (primeira vez ou quando adicionar notas)
-python -c "from rag import create_db; create_db()"
-
-# 2. Iniciar o chat com modelo local
-python chat.py --local --model llama3.2:1b
-
-# 3. Ou com modelo maior (se tiver RAM)
-python chat.py --local --model llama3.2:3b
-
-# 4. Ou com modelo mais leve
-python chat.py --local --model qwen2.5:0.5b
-
-# 5. Testar conexão com Obsidian
-python rag.py test-obsidian
-
-# 6. Buscar algo no banco de dados
-python rag.py search "termo da busca" ```bash
+---
 
 ## 🚀 Instalação
 
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/local-llm-obsidian-assistant.git
+git clone https://github.com/aspasSec/local-llm-obsidian-assistant.git
 cd local-llm-obsidian-assistant
-
 2. Crie um ambiente virtual
 bash
 # Windows
@@ -61,15 +37,16 @@ source venv/bin/activate
 3. Instale as dependências
 bash
 pip install -r requirements.txt
-
 4. Baixe um modelo LLM local
 bash
 # Modelo leve (recomendado para começar)
 ollama pull llama3.2:1b
 
-# Ou modelo um pouco maior
+# Ou modelo maior (se tiver RAM)
 ollama pull llama3.2:3b
 
+# Ou modelo mais leve ainda
+ollama pull qwen2.5:0.5b
 5. Configure o caminho do Obsidian
 Edite o arquivo rag.py e altere o caminho do seu vault:
 
@@ -89,30 +66,38 @@ OBSIDIAN_API_KEY=sua_chave_aqui
 OBSIDIAN_PORT=27123
 Nota: A integração com Obsidian é opcional. Se não quiser usar, ignore as configurações do Obsidian.
 
-🎯 Primeira execução
-1. Crie o banco de dados (apenas uma vez)
+🎯 Como Rodar
+1. Crie o banco de dados (primeira vez apenas)
 bash
 python -c "from rag import create_db; create_db()"
 Isso vai ler todas as suas notas do Obsidian e criar um banco vetorial.
 
 2. Inicie o assistente
 bash
+# Com modelo leve
 python chat.py --local --model llama3.2:1b
-📖 Uso diário
-Comandos básicos
-bash
-# Ativar ambiente virtual
-venv\Scripts\activate
 
-# Iniciar o chat
-python chat.py --local --model llama3.2:1b
-Comandos dentro do chat
+# Com modelo maior (se tiver RAM)
+python chat.py --local --model llama3.2:3b
+
+# Com modelo mais leve
+python chat.py --local --model qwen2.5:0.5b
+3. Comandos dentro do chat
 Comando	Descrição
 /sair ou /exit	Fechar o assistente
 /clear	Limpar histórico da conversa
 /context	Mostrar/esconder contexto usado
 /stats	Ver estatísticas de uso
+4. Outros comandos úteis
+bash
+# Testar conexão com Obsidian
+python rag.py test-obsidian
 
+# Buscar algo no banco de dados
+python rag.py search "termo da busca"
+
+# Atualizar banco (quando adicionar notas)
+python -c "from rag import create_db; create_db()"
 Exemplo de uso
 text
 >> O que é phishing?
@@ -123,26 +108,18 @@ text
 📚 Contexto encontrado: 3 documentos
 
 🤖 Phishing é um tipo de ataque cibernético onde criminosos...
-🔄 Atualizando o banco de dados
-Quando você adicionar ou modificar notas no Obsidian:
-
-bash
-python -c "from rag import create_db; create_db()"
 🛠️ Solução de problemas
 Erro: Ollama não encontrado
 bash
 # Verifique se o Ollama está instalado
 ollama --version
 
-# Se não funcionar, adicione ao PATH ou use o caminho completo
+# Se não funcionar, use o caminho completo
 "C:\Program Files\Ollama\ollama.exe" --version
 Erro: Modelo não responde
 bash
 # Teste o modelo diretamente
 ollama run llama3.2:1b "Olá"
-
-# Se não funcionar, use um modelo mais leve
-ollama pull llama3.2:1b
 Erro: Banco de dados vazio
 bash
 # Recrie o banco
@@ -151,8 +128,6 @@ Erro: Pouca memória RAM
 Use um modelo mais leve:
 
 bash
-ollama pull llama3.2:1b  # Apenas 1.3GB
-# ou
 ollama pull qwen2.5:0.5b  # Apenas 395MB
 📁 Estrutura do projeto
 text
@@ -164,19 +139,8 @@ local-llm-obsidian-assistant/
 ├── requirements.txt     # Dependências
 ├── .env                 # Configurações (não commitar)
 ├── db/                  # Banco ChromaDB (gerado)
+├── vault/               # Suas notas
 └── README.md
-📦 Dependências
-txt
-langchain-chroma>=0.1.0
-langchain-huggingface>=0.1.0
-langchain-text-splitters>=0.3.0
-chromadb>=0.4.22
-sentence-transformers>=2.2.2
-python-dotenv>=1.0.0
-requests>=2.31.0
-🤝 Contribuindo
-Sinta-se à vontade para abrir issues ou pull requests!
-
 📄 Licença
 MIT License
 
@@ -187,33 +151,6 @@ Desenvolvido com 🧠 para aprender com seu conhecimento pessoal
 
 text
 
-## 📝 Também crie o arquivo `.gitignore`:
-
-```gitignore
-# Banco de dados
-db/
-
-# Ambiente virtual
-venv/
-env/
-ENV/
-
-# Arquivos de configuração com senhas
-.env
-
-# Cache do Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# IDE
-.vscode/
-.idea/
-
-# Logs
-*.log
-
-# Sistema
-.DS_Store
-Thumbs.db
+Agora está organizado:
+- **Instalação** = configurar o ambiente (1 vez)
+- **Como Rodar** = comandos para usar todo dia
