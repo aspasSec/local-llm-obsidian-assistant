@@ -144,7 +144,5 @@ local-llm-obsidian-assistant/
 📄 Licença
 MIT License
 
-⚠️ Aviso
+ Aviso
 Este projeto é para fins educacionais. Use as ferramentas de segurança apenas em sistemas autorizados.
-
-Desenvolvido com 🧠 para aprender com seu conhecimento pessoal
